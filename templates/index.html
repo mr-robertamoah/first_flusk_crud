@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %} Employees CRUD {% endblock %}
+
+{% block body %} 
+    <div class="p-4 text-gray-600 my-4 font-semibold text-lg">
+        <div class="w-full flex justify-center">Employees</div>
+        <div class="float-right my-2">
+            <button 
+                id="addbutton"
+                class="outline-none capitalize text-sm bg-green-600 rounded-lg py-2 px-4 text-green-100 hover:bg-green-700 transition active:outline-2 active:outline-green-700"
+            >new Employee</button>
+        </div>
+    </div>
+    <div class="w-full flex justify-center">
+        <div class="w-auto px-4 overflow-y-auto">
+            <table class="w-auto">
+                <thead>
+                    <tr class="bg-slate-500 text-slate-50">
+                        <th class="rounded-tl-sm rounded-bl-sm p-2">Id</th>
+                        <th class="p-2">Name</th>
+                        <th class="p-2">Email</th>
+                        <th>Phone</th>
+                        <th class="rounded-tr-sm rounded-br-sm p-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for employee in employees %}
+                    <tr>
+                        <td class="px-2 text-center min-w-[50px]">{{employee.id}}</td>
+                        <td class="px-2 text-center min-w-[50px]">{{employee.name}}</td>
+                        <td class="px-2 text-center min-w-[50px]">{{employee.email}}</td>
+                        <td class="px-2 text-center min-w-[50px]">{{employee.phone}}</td>
+                        <td class="px-2 text-center min-w-[50px] py-2">
+                            <div class="inline-flex">
+                                <button 
+                                    class="outline-none bg-green-600 rounded-lg py-1 px-4 text-green-100 hover:bg-green-700 transition active:outline-2 active:outline-green-700"
+                                    onclick="editEmployee('{{employee.id}}', '{{employee.name}}', '{{employee.email}}', '{{employee.phone}}')"
+                                >edit</button>
+                                <button 
+                                    class="ml-2 outline-none bg-red-600 rounded-lg py-1 px-4 text-red-100 hover:bg-red-700 transition active:outline-2 active:outline-red-700"
+                                    onclick="deleteEmployee('{{employee.id}}', '{{employee.name}}')"
+                                >delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div 
+        id="addmodal"
+        class="transition-opacity absolute top-0 bottom-0 right-0 left-0 bg-gray-500 bg-opacity-75 z-40 flex justify-center items-center p-4 invisible">
+        <div id="modal" class="bg-slate-50 w-screen h-[500px] sm:w-[500px] rounded relative">
+            <div 
+            id="addmodalclose"
+            class="bg-white absolute cursor-pointer text-slate-400 flex justify-center items-center -top-3 rounded-full right-0 h-[25px] w-[25px]">x</div>
+            <div class="bg-slate-400 text-white w-full p-4 text-center" id="modalheader">Add Employee</div>
+            <div class="p-4" id="addorupdate">
+                <form action="/add" method="post" id="addform">
+                    <div class="mx-auto w-full py-2 px-4">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name"
+                            class="w-full outline-none focus:outline-2 focus:border-0 focus:outline-blue-600 border-b-2 rounded-none border-blue-600 focus:rounded p-1" max="100" required>
+                    </div>
+                    <div class="mx-auto w-full py-2 px-4">
+                        <label for="name">Email</label>
+                        <input type="text" name="email" id="email"
+                            class="w-full outline-none focus:outline-2 focus:border-0 focus:outline-blue-600 border-b-2 rounded-none border-blue-600 focus:rounded p-1" max="100" required>
+                    </div>
+                    <div class="mx-auto w-full py-2 px-4">
+                        <label for="name">Phone</label>
+                        <input type="text" name="phone" id="phone"
+                            class="w-full outline-none focus:outline-2 focus:border-0 focus:outline-blue-600 border-b-2 rounded-none border-blue-600 focus:rounded p-1" max="100" required>
+                    </div>
+                    <div class="mx-auto w-full p-4">
+                        <button 
+                            class="outline-none bg-blue-600 rounded-lg py-1 px-4 text-blue-100 hover:bg-blue-700 transition active:outline-2 active:outline-blue-700"
+                            type="submit"
+                            id="modalbutton"
+                        >add</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="p-4" id="delete">
+                <div id="deletemessage" class="text-red-600"></div>
+
+                <div>
+                    <div class="w-full my-2 flex justify-between">
+                        <form action="" method="post" id="deleteform">
+                        <button 
+                            class="outline-none bg-red-600 rounded-lg py-1 px-4 text-red-100 hover:bg-red-700 transition active:outline-2 active:outline-red-700"
+                            type="submit"
+                        >delete</button></form>
+                        <button 
+                            class="ml-2 outline-none bg-blue-600 rounded-lg py-1 px-4 text-blue-100 hover:bg-blue-700 transition active:outline-2 active:outline-blue-700"
+                            onclick="closeAddModal()"
+                        >cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
